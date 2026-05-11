@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cairo Transportation Control Center</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="workspace">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="mark"></span>
+          <div>
+            <h1>Cairo Mobility</h1>
+            <p>Transportation control center</p>
+          </div>
+        </div>
+
+        <label>
+          Traffic Period
+          <select id="period">
+            <option value="morning">Morning Peak</option>
+            <option value="afternoon">Afternoon</option>
+            <option value="evening">Evening Peak</option>
+            <option value="night">Night</option>
+          </select>
+        </label>
+
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="route">Routes</button>
+          <button class="tab" data-tab="emergency">Emergency</button>
+          <button class="tab" data-tab="planning">Planning</button>
+          <button class="tab" data-tab="transit">Transit</button>
+        </div>
+
+        <section class="panel active" id="routePanel">
+          <label>From <select id="startNode"></select></label>
+          <label>To <select id="endNode"></select></label>
+          <label>
+            Algorithm
+            <select id="algorithm">
+              <option value="dijkstra">Dijkstra shortest time</option>
+              <option value="astar">A* route search</option>
+              <option value="least">Least congested</option>
+              <option value="alternate">Alternate route</option>
+              <option value="time">Time-varying</option>
+            </select>
+          </label>
+          <label class="optional" id="blockedWrap">Blocked road key <input id="blocked" placeholder="3-5"></label>
+          <label class="optional" id="hourWrap">Departure hour <input id="hour" type="number" min="0" max="23" value="8"></label>
+          <button class="primary" id="runRoute">Find Route</button>
+        </section>
+
+        <section class="panel" id="emergencyPanel">
+          <label>Ambulance Origin <select id="originNode"></select></label>
+          <button class="primary emergency" id="runEmergency">Dispatch Ambulance</button>
+        </section>
+
+        <section class="panel" id="planningPanel">
+          <label>
+            MST Mode
+            <select id="mstMode">
+              <option value="distance">Minimize distance</option>
+              <option value="cost">Expansion cost plan</option>
+            </select>
+          </label>
+          <button class="primary" id="runMst">Build Network Plan</button>
+        </section>
+
+        <section class="panel" id="transitPanel">
+          <button class="primary" id="runTransit">Optimize Transit Supply</button>
+        </section>
+      </aside>
+
+      <section class="main">
+        <header class="topbar">
+          <div class="metric"><strong id="nodeCount">--</strong><span>Locations</span></div>
+          <div class="metric"><strong id="roadCount">--</strong><span>Roads</span></div>
+          <div class="metric"><strong id="criticalCount">--</strong><span>Critical Sites</span></div>
+          <div class="metric"><strong id="signalCount">--</strong><span>Signals</span></div>
+        </header>
+
+        <section class="map-area">
+          <svg id="networkMap" viewBox="0 0 1000 640" aria-label="Cairo transportation network map"></svg>
+          <div class="legend">
+            <span><i class="clear"></i> Clear</span>
+            <span><i class="moderate"></i> Moderate</span>
+            <span><i class="severe"></i> Severe</span>
+            <span><i class="route"></i> Selected</span>
+          </div>
+        </section>
+      </section>
+
+      <aside class="inspector">
+        <section class="result">
+          <h2 id="resultTitle">Network Status</h2>
+          <p id="resultSummary">Choose a mode on the left to run the connected algorithms.</p>
+          <div class="stats" id="resultStats"></div>
+          <div class="path" id="pathList"></div>
+        </section>
+
+        <section class="result">
+          <h2>Congestion Hotspots</h2>
+          <div id="hotspots" class="list"></div>
+        </section>
+
+        <section class="result">
+          <h2>Details</h2>
+          <div id="details" class="list compact"></div>
+        </section>
+      </aside>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
